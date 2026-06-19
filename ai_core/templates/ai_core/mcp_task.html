@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+{% load static %}
+<link rel="stylesheet" href="{% static 'ai_core/mcp_task.css' %}">
+<meta charset="utf-8">
+<title>Skatlaz MCP Task</title>
+<style>
+body{font-family:Arial,sans-serif;background:#fff;color:#6B7A2D;margin:0}.wrap{max-width:960px;margin:40px auto;padding:30px;border:1px solid #d6c48a;border-radius:18px}.brand{text-align:center}.brand img{width:120px}.card{background:#fff;border:1px solid #e6dec2;border-radius:16px;padding:22px;box-shadow:0 12px 30px rgba(107,122,45,.08)}label{display:block;margin-top:14px;font-weight:700;color:#7a5a24}select,input,textarea{width:100%;padding:12px;border:1px solid #d6c48a;border-radius:10px}button{margin-top:18px;background:#6B7A2D;color:#fff;border:0;padding:12px 22px;border-radius:999px;font-weight:700;cursor:pointer}.muted{color:#8b6b35}</style>
+</head>
+<body><div class="wrap"><div class="brand"><img src="/static/ai_core/img/skatlaz.jpeg"><h1>Skatlaz Server AI MCP</h1><p class="muted">Code, Debug, Image e Documents parametrizados por JSON + Admin</p></div><form class="card" method="post"><label>Tipo</label><select name="task_type"><option value="code">code</option><option value="debug">debug</option><option value="image">image</option><option value="documents">documents</option></select><label>Linguagem</label><input name="language" value="html"><label>Sistema</label><select name="target_os"><option>all</option><option>windows</option><option>linux</option><option>macosx</option><option>android</option><option>ios</option><option>web</option></select><label>Prompt</label><textarea name="prompt" rows="8" placeholder="Descreva o que o Gemini/MCP deve gerar..."></textarea><button>Gerar JSON MCP</button></form></div></body>
+</html>

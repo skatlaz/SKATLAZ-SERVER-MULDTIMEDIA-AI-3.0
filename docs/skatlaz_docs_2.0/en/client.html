@@ -1,0 +1,11 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Skatlaz Client 2.0 / Ask</title><link rel="stylesheet" href="../assets/style.css"></head><body><div class="topbar"><nav class="nav"><div class="brand">SKATLAZ <span>SERVER 2.0</span></div><div class="links"><a href="index.html">Home</a><a href="architecture.html">Architecture</a><a href="client.html">Client Ask</a><a href="rag.html">RAG</a><a href="pipeline.html">Pipeline</a><a href="endpoints.html">Endpoints</a><a href="install.html">Install</a><a href="mcp.html">MCPs</a><a href="security.html">Best practices</a></div><div class="langbar"><a class="lang-btn" href="../client.html">Português</a><a class="lang-btn active" href="../en/client.html">English</a><a class="lang-btn" href="../es/client.html">Español</a><a class="lang-btn" href="../fr/client.html">Français</a></div></nav></div><main class="wrap"><section class="section"><h2>Skatlaz Client 2.0 / Ask</h2><p>The Client should stay simple: a prompt textarea, task type, language, target OS and agent slug selectors. The answer returns as JSON or text in the chat.</p><pre>fetch('/ai/mcp-task/', {
+  method: 'POST',
+  headers: {'Content-Type':'application/json'},
+  body: JSON.stringify({
+    task_type: 'ask',
+    prompt: prompt,
+    language: 'python',
+    target_os: 'all',
+    agent_slug: 'skatlaz-client-agent'
+  })
+})</pre></section><section class="section"><h2>Chat flow</h2><div class="flow"><div class="step"><b>1</b>User writes</div><div class="step"><b>2</b>Client sends JSON</div><div class="step"><b>3</b>Server orchestrates</div><div class="step"><b>4</b>LLM answers</div><div class="step"><b>5</b>Chat renders</div></div></section></main><footer class="footer">Skatlaz Digi-AI Office · Skatlaz Server 2.0 · offline HTML documentation</footer></body></html>

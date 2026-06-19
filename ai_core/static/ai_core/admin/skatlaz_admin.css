@@ -1,0 +1,317 @@
+:root{
+    --sk-white:#ffffff;
+    --sk-olive:#6B7A2D;
+    --sk-olive-dark:#4f5d1f;
+    --sk-gray:#c3c3c3;
+    --sk-gray-soft:#f5f5f2;
+    --sk-bronze:#9b7430;
+    --sk-gold:#c9a646;
+    --sk-gold-light:#f2df9b;
+    --sk-brown:#6f5424;
+    --sk-border:#ded8c8;
+    --sk-shadow:0 10px 28px rgba(107,122,45,.12);
+}
+
+body{
+    background:linear-gradient(180deg,#fff 0%,#f7f7f3 100%)!important;
+    color:var(--sk-brown)!important;
+}
+
+/* Header */
+#header{
+    background:#fff!important;
+    color:var(--sk-olive)!important;
+    border-bottom:1px solid var(--sk-gray)!important;
+    box-shadow:var(--sk-shadow);
+}
+
+#branding h1,
+#branding h1 a{
+    color:var(--sk-olive)!important;
+    font-weight:900!important;
+    letter-spacing:2px;
+    text-transform:uppercase;
+}
+
+#user-tools,
+#user-tools a{
+    color:var(--sk-brown)!important;
+}
+
+/* Breadcrumbs */
+div.breadcrumbs{
+    background:#f8f6ef!important;
+    color:var(--sk-brown)!important;
+    border-bottom:1px solid var(--sk-border)!important;
+}
+
+div.breadcrumbs a{
+    color:var(--sk-olive)!important;
+    font-weight:700;
+}
+
+/* Títulos dos módulos */
+.module{
+    background:#fff!important;
+    border:1px solid var(--sk-border)!important;
+    border-radius:16px!important;
+    overflow:hidden;
+    box-shadow:0 6px 18px rgba(0,0,0,.04);
+}
+
+.module h2,
+.module caption,
+.inline-group h2{
+    background:linear-gradient(
+        135deg,
+        var(--sk-olive),
+        var(--sk-olive-dark)
+    ) !important;
+
+    color:#fff !important;
+}
+
+/* Links */
+/* Links */
+a:link,
+a:visited{
+    color:#96986c !important;
+    font-weight:600;
+    transition:.2s ease;
+}
+
+a:hover{
+    color:#c3c3c3 !important;
+}
+
+/* Botões bronze/golden light */
+.button,
+input[type=submit],
+input[type=button],
+.submit-row input,
+a.button,
+.object-tools a{
+    background:linear-gradient(135deg,var(--sk-gold-light),var(--sk-gold) 45%,var(--sk-bronze))!important;
+    color:#fff!important;
+    border:1px solid rgba(111,84,36,.25)!important;
+    border-radius:999px!important;
+    padding:9px 18px!important;
+    font-weight:800!important;
+    text-shadow:0 1px 1px rgba(0,0,0,.18);
+    box-shadow:0 6px 16px rgba(155,116,48,.22);
+    transition:.25s ease;
+}
+
+.button:hover,
+input[type=submit]:hover,
+input[type=button]:hover,
+.submit-row input:hover,
+a.button:hover,
+.object-tools a:hover{
+    background:linear-gradient(135deg,var(--sk-bronze),var(--sk-gold))!important;
+    transform:translateY(-1px);
+    box-shadow:0 10px 22px rgba(155,116,48,.32);
+}
+
+/* Botão default */
+input[type=submit].default,
+.submit-row input.default{
+    background:linear-gradient(135deg,var(--sk-olive),var(--sk-olive-dark))!important;
+}
+
+/* Campos */
+input,
+textarea,
+select,
+.vTextField{
+    background:#fff!important;
+    color:#4d3b1d!important;
+    border:1px solid var(--sk-gray)!important;
+    border-radius:10px!important;
+    padding:9px 10px!important;
+    box-shadow:inset 0 1px 2px rgba(0,0,0,.03);
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+.vTextField:focus{
+    border-color:var(--sk-gold)!important;
+    outline:none!important;
+    box-shadow:0 0 0 3px rgba(201,166,70,.18)!important;
+}
+
+/* Tabelas */
+table{
+    background:#fff!important;
+}
+
+thead th{
+    background:#f3f3ee!important;
+    color:var(--sk-olive)!important;
+    border-bottom:1px solid var(--sk-gray)!important;
+}
+
+tr:nth-child(even){
+    background:#fafaf7!important;
+}
+
+td,
+th{
+    border-bottom:1px solid #ece8dc!important;
+}
+
+/* Form rows */
+.form-row{
+    border-bottom:1px solid #eee9dc!important;
+    padding:12px 10px!important;
+}
+
+.submit-row{
+    background:#f8f6ef!important;
+    border:1px solid var(--sk-border)!important;
+    border-radius:16px!important;
+    box-shadow:0 6px 18px rgba(0,0,0,.04);
+}
+
+/* Sidebar */
+#content-related{
+    background:#fff!important;
+    border:1px solid var(--sk-border)!important;
+    border-radius:16px!important;
+    box-shadow:var(--sk-shadow);
+}
+
+#content-related h3{
+    color:var(--sk-olive)!important;
+}
+
+/* Select filter */
+.selector-chosen h2{
+    background:linear-gradient(135deg,var(--sk-gold),var(--sk-bronze))!important;
+    color:#fff!important;
+}
+
+.selector h2{
+    border-radius:12px 12px 0 0!important;
+}
+
+/* Dashboard */
+.dashboard .module table th{
+    width:100%;
+}
+
+.dashboard .module table td,
+.dashboard .module table th{
+    padding:11px 14px!important;
+}
+
+/* Mensagens */
+.messagelist li{
+    border-radius:12px!important;
+    box-shadow:0 4px 14px rgba(0,0,0,.05);
+}
+
+/* Responsivo */
+@media(max-width:768px){
+    #header{
+        padding:14px 12px!important;
+    }
+
+    #branding h1,
+    #branding h1 a{
+        font-size:22px!important;
+        letter-spacing:1px;
+    }
+
+    .button,
+    input[type=submit],
+    input[type=button],
+    .submit-row input,
+    a.button{
+        width:auto;
+        padding:10px 16px!important;
+    }
+
+    .module{
+        border-radius:12px!important;
+    }
+
+    .submit-row{
+        display:flex;
+        flex-wrap:wrap;
+        gap:8px;
+    }
+}
+/* Banner Skatlaz */
+
+/* Banner */
+
+.skatlaz-admin-banner{
+    display:block;
+    width:100%;
+    clear:both;
+    margin:0 0 25px 0;
+}
+
+.skatlaz-admin-banner img{
+    display:block;
+    width:480px;
+    height:auto;
+
+    border-radius:20px;
+
+    border:1px solid #d9d9d9;
+
+    box-shadow:
+        0 10px 25px rgba(0,0,0,.08);
+
+    object-fit:cover;
+}
+
+/* Header Admin */
+
+#header{
+    display:flex !important;
+    flex-wrap:wrap !important;
+    align-items:center;
+}
+
+/* Faz o branding ocupar a linha inteira */
+
+#branding{
+    width:100% !important;
+    flex:0 0 100% !important;
+}
+
+/* Usuário cai para baixo */
+
+#user-tools{
+    width:100% !important;
+    flex:0 0 100% !important;
+
+    text-align:right;
+    margin-top:10px;
+}
+
+/* Logo texto */
+
+#site-name{
+    display:block;
+    width:100%;
+    margin-top:15px;
+}
+
+/* Responsivo */
+
+@media(max-width:768px){
+
+    #user-tools{
+        text-align:center;
+    }
+
+    .skatlaz-admin-banner img{
+        border-radius:12px;
+    }
+
+}

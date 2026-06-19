@@ -1,0 +1,175 @@
+from django.db import models
+from django.contrib.auth import get_user_model
+
+
+class TimestampedModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class LLMProvider(TimestampedModel):
+    PROVIDER_CHOICES = [
+        ("ollama", "Ollama Local"),
+        ("gemini", "Google Gemini"),
+        ("openai", "OpenAI compatible"),
+        ("custom", "Custom HTTP"),
+    ]
+    name = models.CharField(max_length=120, unique=True)
+    provider_type = models.CharField(max_length=32, choices=PROVIDER_CHOICES)
+    base_url = models.CharField(max_length=300, blank=True, default="http://localhost:11434")
+    api_key_env = models.CharField(max_length=120, blank=True, help_text="Environment variable that stores the API key")
+    default_model = models.CharField(max_length=120, blank=True)
+    embedding_model = models.CharField(max_length=120, blank=True, default="nomic-embed-text")
+    enabled = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.name} ({self.provider_type})"
+
+
+class PromptTemplate(TimestampedModel):
+    name = models.CharField(max_length=120, unique=True)
+    category = models.CharField(max_length=80, blank=True, db_index=True)
+    system_prompt = models.TextField(default="You are Skatlaz Server AI, a helpful generative AI server.")
+    user_template = models.TextField(default="{question}\n\nContext:\n{context}")
+    temperature = models.FloatField(default=0.2)
+    top_p = models.FloatField(default=0.9)
+    active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
+
+
+class AgentCategory(TimestampedModel):
+    name = models.CharField(max_length=120, unique=True)
+    slug = models.SlugField(max_length=140, unique=True)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class AIAgent(TimestampedModel):
+    name = models.CharField(max_length=120, unique=True)
+    category = models.ForeignKey(AgentCategory, on_delete=models.SET_NULL, null=True, blank=True, related_name="agents")
+    provider = models.ForeignKey(LLMProvider, on_delete=models.SET_NULL, null=True, blank=True)
+    prompt_template = models.ForeignKey(PromptTemplate, on_delete=models.SET_NULL, null=True, blank=True)
+    model_name = models.CharField(max_length=120, blank=True)
+    description = models.TextField(blank=True)
+    tools = models.JSONField(default=list, blank=True, help_text="Examples: rag, webdiver, python, image_search")
+    enabled = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
+
+
+class RAGCollection(TimestampedModel):
+    name = models.CharField(max_length=120, unique=True)
+    description = models.TextField(blank=True)
+    embedding_provider = models.ForeignKey(LLMProvider, on_delete=models.SET_NULL, null=True, blank=True)
+    embedding_model = models.CharField(max_length=120, blank=True, default="nomic-embed-text")
+    vector_backend = models.CharField(max_length=40, default="sqlite", help_text="sqlite, chroma, faiss")
+    enabled = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
+
+
+class DocumentSource(TimestampedModel):
+    SOURCE_CHOICES = [("upload", "Upload"), ("web", "WebDiver URL"), ("csv", "CSV"), ("manual", "Manual text")]
+    collection = models.ForeignKey(RAGCollection, on_delete=models.CASCADE, related_name="sources")
+    source_type = models.CharField(max_length=20, choices=SOURCE_CHOICES, default="upload")
+    title = models.CharField(max_length=240)
+    url = models.URLField(blank=True)
+    file = models.FileField(upload_to="rag_uploads/", blank=True, null=True)
+    raw_text = models.TextField(blank=True)
+    metadata = models.JSONField(default=dict, blank=True)
+    indexed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.title
+
+
+class RAGChunk(TimestampedModel):
+    collection = models.ForeignKey(RAGCollection, on_delete=models.CASCADE, related_name="chunks")
+    source = models.ForeignKey(DocumentSource, on_delete=models.CASCADE, related_name="chunks", null=True, blank=True)
+    text = models.TextField()
+    embedding = models.JSONField(default=list, blank=True)
+    metadata = models.JSONField(default=dict, blank=True)
+
+    class Meta:
+        indexes = [models.Index(fields=["collection", "created_at"])]
+
+    def __str__(self):
+        return self.text[:80]
+
+
+class WebDiverTask(TimestampedModel):
+    STATUS = [("pending", "Pending"), ("running", "Running"), ("done", "Done"), ("error", "Error")]
+    collection = models.ForeignKey(RAGCollection, on_delete=models.SET_NULL, null=True, blank=True)
+    url = models.URLField()
+    diver_type = models.CharField(max_length=20, default="_text", help_text="_text, _html, _filter, _download")
+    database_path = models.CharField(max_length=300, default="db_webdiver.sqlite")
+    status = models.CharField(max_length=20, choices=STATUS, default="pending")
+    result_text = models.TextField(blank=True)
+    error = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"{self.url} [{self.status}]"
+
+
+class TrainingDataset(TimestampedModel):
+    FORMAT_CHOICES = [("chat", "Chat JSONL"), ("instruct", "Instruction"), ("csv", "CSV"), ("rag", "RAG chunks")]
+    name = models.CharField(max_length=120, unique=True)
+    category = models.ForeignKey(AgentCategory, on_delete=models.SET_NULL, null=True, blank=True)
+    collection = models.ForeignKey(RAGCollection, on_delete=models.SET_NULL, null=True, blank=True)
+    file = models.FileField(upload_to="datasets/", blank=True, null=True)
+    format_type = models.CharField(max_length=20, choices=FORMAT_CHOICES, default="instruct")
+    prepared_path = models.CharField(max_length=300, blank=True)
+    notes = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class FineTuneJob(TimestampedModel):
+    STATUS = [("draft", "Draft"), ("queued", "Queued"), ("running", "Running"), ("done", "Done"), ("error", "Error")]
+    METHOD = [("lora", "LoRA"), ("qlora", "QLoRA"), ("modelfile", "Ollama Modelfile only")]
+    name = models.CharField(max_length=120, unique=True)
+    agent = models.ForeignKey(AIAgent, on_delete=models.SET_NULL, null=True, blank=True)
+    base_model = models.CharField(max_length=160, default="llama3.1")
+    dataset = models.ForeignKey(TrainingDataset, on_delete=models.SET_NULL, null=True, blank=True)
+    method = models.CharField(max_length=20, choices=METHOD, default="qlora")
+    hyperparameters = models.JSONField(default=dict, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS, default="draft")
+    output_dir = models.CharField(max_length=300, blank=True)
+    modelfile_path = models.CharField(max_length=300, blank=True)
+    ollama_model_name = models.CharField(max_length=120, blank=True)
+    log = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class ChatSession(TimestampedModel):
+    user = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
+    agent = models.ForeignKey(AIAgent, on_delete=models.SET_NULL, null=True, blank=True)
+    title = models.CharField(max_length=200, blank=True)
+
+    def __str__(self):
+        return self.title or f"Chat {self.pk}"
+
+
+class ChatMessage(TimestampedModel):
+    ROLE = [("user", "User"), ("assistant", "Assistant"), ("system", "System"), ("tool", "Tool")]
+    session = models.ForeignKey(ChatSession, on_delete=models.CASCADE, related_name="messages")
+    role = models.CharField(max_length=20, choices=ROLE)
+    content = models.TextField()
+    provider = models.ForeignKey(LLMProvider, on_delete=models.SET_NULL, null=True, blank=True)
+    model_name = models.CharField(max_length=120, blank=True)
+    metadata = models.JSONField(default=dict, blank=True)
+
+    def __str__(self):
+        return f"{self.role}: {self.content[:80]}"

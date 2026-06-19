@@ -1,0 +1,12 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path("chat/", views.chat),
+    path("models/list/", views.models_list),
+    path("rag/search/", views.rag_search),
+    path("rag/index-source/", views.index_source_view),
+    path("crawler/start/", views.crawler_start),
+    path("finetune/prepare/", views.finetune_prepare),
+    path("ollama/export/", views.ollama_export),
+]

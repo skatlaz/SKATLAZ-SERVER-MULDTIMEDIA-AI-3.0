@@ -1,0 +1,91 @@
+from django.contrib import admin
+from .models import *
+
+@admin.register(LLMProvider)
+class LLMProviderAdmin(admin.ModelAdmin):
+    list_display = ("name", "provider_type", "default_model", "enabled", "updated_at")
+    list_filter = ("provider_type", "enabled")
+    search_fields = ("name", "default_model")
+
+@admin.register(PromptTemplate)
+class PromptTemplateAdmin(admin.ModelAdmin):
+    list_display = ("name", "category", "temperature", "active")
+    list_filter = ("category", "active")
+    search_fields = ("name", "system_prompt")
+
+class AIAgentInline(admin.TabularInline):
+    model = AIAgent
+    extra = 0
+
+@admin.register(AgentCategory)
+class AgentCategoryAdmin(admin.ModelAdmin):
+    list_display = ("name", "slug", "updated_at")
+    prepopulated_fields = {"slug": ("name",)}
+    inlines = [AIAgentInline]
+
+@admin.register(AIAgent)
+class AIAgentAdmin(admin.ModelAdmin):
+    list_display = ("name", "category", "provider", "model_name", "enabled")
+    list_filter = ("category", "provider", "enabled")
+    search_fields = ("name", "description", "model_name")
+
+class DocumentSourceInline(admin.TabularInline):
+    model = DocumentSource
+    extra = 0
+    fields = ("title", "source_type", "url", "file", "indexed")
+
+@admin.register(RAGCollection)
+class RAGCollectionAdmin(admin.ModelAdmin):
+    list_display = ("name", "vector_backend", "embedding_model", "enabled", "updated_at")
+    list_filter = ("vector_backend", "enabled")
+    search_fields = ("name", "description")
+    inlines = [DocumentSourceInline]
+
+@admin.register(DocumentSource)
+class DocumentSourceAdmin(admin.ModelAdmin):
+    list_display = ("title", "collection", "source_type", "indexed", "updated_at")
+    list_filter = ("source_type", "indexed", "collection")
+    search_fields = ("title", "url", "raw_text")
+
+@admin.register(RAGChunk)
+class RAGChunkAdmin(admin.ModelAdmin):
+    list_display = ("collection", "source", "short_text", "updated_at")
+    list_filter = ("collection",)
+    search_fields = ("text",)
+    def short_text(self, obj): return obj.text[:120]
+
+@admin.register(WebDiverTask)
+class WebDiverTaskAdmin(admin.ModelAdmin):
+    list_display = ("url", "diver_type", "status", "collection", "updated_at")
+    list_filter = ("status", "diver_type", "collection")
+    search_fields = ("url", "result_text", "error")
+
+@admin.register(TrainingDataset)
+class TrainingDatasetAdmin(admin.ModelAdmin):
+    list_display = ("name", "category", "format_type", "collection", "updated_at")
+    list_filter = ("format_type", "category")
+    search_fields = ("name", "notes")
+
+@admin.register(FineTuneJob)
+class FineTuneJobAdmin(admin.ModelAdmin):
+    list_display = ("name", "agent", "base_model", "method", "status", "ollama_model_name", "updated_at")
+    list_filter = ("method", "status", "base_model")
+    search_fields = ("name", "base_model", "ollama_model_name", "log")
+
+class ChatMessageInline(admin.TabularInline):
+    model = ChatMessage
+    extra = 0
+    readonly_fields = ("created_at",)
+
+@admin.register(ChatSession)
+class ChatSessionAdmin(admin.ModelAdmin):
+    list_display = ("id", "title", "agent", "user", "updated_at")
+    list_filter = ("agent", "user")
+    search_fields = ("title",)
+    inlines = [ChatMessageInline]
+
+@admin.register(ChatMessage)
+class ChatMessageAdmin(admin.ModelAdmin):
+    list_display = ("session", "role", "model_name", "created_at")
+    list_filter = ("role", "provider")
+    search_fields = ("content",)

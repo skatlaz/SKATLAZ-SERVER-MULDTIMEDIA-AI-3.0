@@ -1,0 +1,7 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Installation and execution</title><link rel="stylesheet" href="../assets/style.css"></head><body><div class="topbar"><nav class="nav"><div class="brand">SKATLAZ <span>SERVER 2.0</span></div><div class="links"><a href="index.html">Home</a><a href="architecture.html">Architecture</a><a href="client.html">Client Ask</a><a href="rag.html">RAG</a><a href="pipeline.html">Pipeline</a><a href="endpoints.html">Endpoints</a><a href="install.html">Install</a><a href="mcp.html">MCPs</a><a href="security.html">Best practices</a></div><div class="langbar"><a class="lang-btn" href="../install.html">Português</a><a class="lang-btn active" href="../en/install.html">English</a><a class="lang-btn" href="../es/install.html">Español</a><a class="lang-btn" href="../fr/install.html">Français</a></div></nav></div><main class="wrap"><section class="section"><h2>Installation and execution</h2><p>Run Ollama Server and Skatlaz Server in separate terminals.</p><h3>Ollama</h3><pre>ollama serve
+ollama pull llama3.1
+ollama pull nomic-embed-text</pre><h3>Skatlaz Server</h3><pre>python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver 127.0.0.1:8000</pre><p>Fluxo:</p><pre>Skatlaz Client → Skatlaz Server → Ollama → LLM → Resposta</pre></section></main><footer class="footer">Skatlaz Digi-AI Office · Skatlaz Server 2.0 · offline HTML documentation</footer></body></html>

@@ -1,0 +1,65 @@
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import AIAgent, RAGCollection, ChatSession, WebDiverTask, DocumentSource, FineTuneJob
+from .agents.router import ask_agent
+from .rag.retriever import index_source, retrieve_context
+from .crawler.webdiver_bridge import run_webdiver_task
+from .training.pytorch_lab import prepare_training_job
+from .finetuning.modelfile_builder import build_modelfile, ollama_create_command
+
+
+def _json(request):
+    try: return json.loads(request.body.decode("utf-8") or "{}")
+    except Exception: return {}
+
+@csrf_exempt
+def chat(request):
+    if request.method != "POST": return JsonResponse({"error": "POST only"}, status=405)
+    data=_json(request)
+    agent=AIAgent.objects.filter(id=data.get("agent_id")).first() if data.get("agent_id") else None
+    collection=RAGCollection.objects.filter(id=data.get("collection_id")).first() if data.get("collection_id") else None
+    session=ChatSession.objects.create(agent=agent, title=(data.get("prompt") or "Chat")[:120]) if data.get("log", True) else None
+    return JsonResponse(ask_agent(data.get("prompt", ""), agent=agent, collection=collection, session=session))
+
+
+def models_list(request):
+    return JsonResponse({"agents": list(AIAgent.objects.filter(enabled=True).values("id","name","model_name","category__name")), "collections": list(RAGCollection.objects.filter(enabled=True).values("id","name","vector_backend"))})
+
+
+def rag_search(request):
+    q=request.GET.get("q", ""); cid=request.GET.get("collection_id")
+    col=RAGCollection.objects.filter(id=cid).first() if cid else RAGCollection.objects.filter(enabled=True).first()
+    return JsonResponse({"collection": col.name if col else None, "context": retrieve_context(col, q)})
+
+@csrf_exempt
+def index_source_view(request):
+    if request.method != "POST": return JsonResponse({"error":"POST only"}, status=405)
+    source=DocumentSource.objects.filter(id=_json(request).get("source_id")).first()
+    if not source: return JsonResponse({"error":"source not found"}, status=404)
+    return JsonResponse({"source_id": source.id, "chunks": index_source(source)})
+
+@csrf_exempt
+def crawler_start(request):
+    if request.method != "POST": return JsonResponse({"error":"POST only"}, status=405)
+    data=_json(request)
+    col=RAGCollection.objects.filter(id=data.get("collection_id")).first() if data.get("collection_id") else None
+    task=WebDiverTask.objects.create(collection=col, url=data.get("url", "https://example.com"), diver_type=data.get("diver_type", "_text"), database_path=data.get("database_path", "db_webdiver.sqlite"))
+    run_webdiver_task(task)
+    return JsonResponse({"task_id": task.id, "status": task.status, "result": task.result_text, "error": task.error})
+
+@csrf_exempt
+def finetune_prepare(request):
+    if request.method != "POST": return JsonResponse({"error":"POST only"}, status=405)
+    job=FineTuneJob.objects.filter(id=_json(request).get("job_id")).first()
+    if not job: return JsonResponse({"error":"job not found"}, status=404)
+    script=prepare_training_job(job)
+    return JsonResponse({"job_id": job.id, "script": script, "modelfile": job.modelfile_path})
+
+@csrf_exempt
+def ollama_export(request):
+    if request.method != "POST": return JsonResponse({"error":"POST only"}, status=405)
+    job=FineTuneJob.objects.filter(id=_json(request).get("job_id")).first()
+    if not job: return JsonResponse({"error":"job not found"}, status=404)
+    build_modelfile(job)
+    return JsonResponse({"job_id": job.id, "modelfile": job.modelfile_path, "command": ollama_create_command(job)})

@@ -1,0 +1,390 @@
+from django.db import models
+from django.utils import timezone
+
+TASK_CHOICES = [
+    ("code", "Code / Programação"),
+    ("debug", "Debug / Correção"),
+    ("image", "Image / Imagem"),
+    ("video", "Video / Vídeo"),
+    ("audio", "Audio / Áudio"),
+    ("rag", "RAG / Base de Conhecimento"),
+    ("train", "Training / Treinamento MCP"),
+    ("ask", "Ask / Cliente"),
+    ("documents", "Documents / Documentos"),
+]
+
+OS_CHOICES = [
+    ("all", "Todos"),
+    ("windows", "Windows"),
+    ("linux", "Linux"),
+    ("macosx", "MacOSX"),
+    ("android", "Android"),
+    ("ios", "iOS"),
+    ("web", "Web"),
+]
+
+STATUS_CHOICES = [
+    ("todo", "To Do"),
+    ("doing", "Doing"),
+    ("done", "Done"),
+    ("error", "Error"),
+]
+
+# ---------------------------------------------------------------------
+# MODELOS ANTIGOS DO SKATLAZ SERVER AI 2.0
+# Mantidos para continuar aparecendo no admin.
+# ---------------------------------------------------------------------
+
+class AgentCategory(models.Model):
+    name = models.CharField(max_length=120, unique=True)
+    slug = models.SlugField(max_length=140, unique=True)
+    description = models.TextField(blank=True)
+    active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        verbose_name = "Agent category"
+        verbose_name_plural = "Agent categorys"
+
+    def __str__(self):
+        return self.name
+
+
+class LlmProvider(models.Model):
+    name = models.CharField(max_length=120, unique=True)
+    provider_type = models.CharField(max_length=80, default="gemini")
+    model_name = models.CharField(max_length=160, blank=True, default="gemini-1.5-flash")
+    api_base_url = models.CharField(max_length=255, blank=True)
+    api_key_env = models.CharField(max_length=120, blank=True, default="GEMINI_API_KEY")
+    config_json = models.JSONField(default=dict, blank=True)
+    active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Llm provider"
+        verbose_name_plural = "Llm providers"
+
+    def __str__(self):
+        return self.name
+
+
+class AIMCPAgent(models.Model):
+    name = models.CharField(max_length=140)
+    slug = models.SlugField(max_length=160, unique=True)
+    category = models.ForeignKey(AgentCategory, null=True, blank=True, on_delete=models.SET_NULL)
+    provider = models.ForeignKey(LlmProvider, null=True, blank=True, on_delete=models.SET_NULL)
+    role = models.CharField(max_length=160, blank=True)
+    system_prompt = models.TextField(blank=True)
+    tools_json = models.JSONField(default=dict, blank=True)
+    memory_json = models.JSONField(default=dict, blank=True)
+    active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Ai agent"
+        verbose_name_plural = "Ai agents"
+
+    def __str__(self):
+        return self.name
+
+
+class ChatSession(models.Model):
+    title = models.CharField(max_length=180, blank=True)
+    agent = models.ForeignKey(AIMCPAgent, null=True, blank=True, on_delete=models.SET_NULL)
+    user_name = models.CharField(max_length=120, blank=True)
+    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default="doing")
+    context_json = models.JSONField(default=dict, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Chat session"
+        verbose_name_plural = "Chat sessions"
+
+    def __str__(self):
+        return self.title or f"Chat #{self.pk}"
+
+
+class ChatMessage(models.Model):
+    session = models.ForeignKey(ChatSession, related_name="messages", on_delete=models.CASCADE)
+    role = models.CharField(max_length=40, default="user")
+    content = models.TextField()
+    metadata_json = models.JSONField(default=dict, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        verbose_name = "Chat message"
+        verbose_name_plural = "Chat messages"
+        ordering = ["created_at"]
+
+    def __str__(self):
+        return f"{self.role}: {self.content[:60]}"
+
+
+class RagCollection(models.Model):
+    name = models.CharField(max_length=160, unique=True)
+    slug = models.SlugField(max_length=180, unique=True)
+    description = models.TextField(blank=True)
+    embedding_model = models.CharField(max_length=160, blank=True)
+    config_json = models.JSONField(default=dict, blank=True)
+    active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        verbose_name = "Rag collection"
+        verbose_name_plural = "Rag collections"
+
+    def __str__(self):
+        return self.name
+
+
+class DocumentSource(models.Model):
+    collection = models.ForeignKey(RagCollection, null=True, blank=True, on_delete=models.SET_NULL)
+    title = models.CharField(max_length=180)
+    source_type = models.CharField(max_length=60, default="upload")
+    url = models.URLField(blank=True)
+    file = models.FileField(upload_to="document_sources/%Y/%m/%d/", null=True, blank=True)
+    text = models.TextField(blank=True)
+    metadata_json = models.JSONField(default=dict, blank=True)
+    indexed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Document source"
+        verbose_name_plural = "Document sources"
+
+    def __str__(self):
+        return self.title
+
+
+class RagChunk(models.Model):
+    collection = models.ForeignKey(RagCollection, null=True, blank=True, on_delete=models.SET_NULL)
+    source = models.ForeignKey(DocumentSource, null=True, blank=True, on_delete=models.CASCADE)
+    chunk_index = models.PositiveIntegerField(default=0)
+    content = models.TextField()
+    embedding_json = models.JSONField(default=list, blank=True)
+    metadata_json = models.JSONField(default=dict, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        verbose_name = "Rag chunk"
+        verbose_name_plural = "Rag chunks"
+        ordering = ["source", "chunk_index"]
+
+    def __str__(self):
+        return f"Chunk {self.chunk_index}"
+
+
+class PromptTemplate(models.Model):
+    title = models.CharField(max_length=180)
+    slug = models.SlugField(max_length=200, unique=True)
+    category = models.CharField(max_length=120, blank=True)
+    prompt = models.TextField()
+    variables_json = models.JSONField(default=dict, blank=True)
+    active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Prompt template"
+        verbose_name_plural = "Prompt templates"
+
+    def __str__(self):
+        return self.title
+
+
+class TrainingDataset(models.Model):
+    title = models.CharField(max_length=180)
+    dataset_type = models.CharField(max_length=80, default="jsonl")
+    file = models.FileField(upload_to="training_datasets/%Y/%m/%d/", null=True, blank=True)
+    data_json = models.JSONField(default=dict, blank=True)
+    notes = models.TextField(blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        verbose_name = "Training dataset"
+        verbose_name_plural = "Training datasets"
+
+    def __str__(self):
+        return self.title
+
+
+class FineTuneJob(models.Model):
+    title = models.CharField(max_length=180)
+    provider = models.ForeignKey(LlmProvider, null=True, blank=True, on_delete=models.SET_NULL)
+    dataset = models.ForeignKey(TrainingDataset, null=True, blank=True, on_delete=models.SET_NULL)
+    base_model = models.CharField(max_length=160, blank=True)
+    output_model = models.CharField(max_length=160, blank=True)
+    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default="todo")
+    logs = models.TextField(blank=True)
+    config_json = models.JSONField(default=dict, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Fine tune job"
+        verbose_name_plural = "Fine tune jobs"
+
+    def __str__(self):
+        return self.title
+
+
+class WebDiverTask(models.Model):
+    title = models.CharField(max_length=180)
+    url = models.URLField(blank=True)
+    task_prompt = models.TextField(blank=True)
+    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default="todo")
+    result_json = models.JSONField(default=dict, blank=True)
+    logs = models.TextField(blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Web diver task"
+        verbose_name_plural = "Web diver tasks"
+
+    def __str__(self):
+        return self.title
+
+
+# ---------------------------------------------------------------------
+# NOVOS MODELOS MCP / JSON / PARAMETRIZAÇÃO
+# ---------------------------------------------------------------------
+
+class AITaskType(models.Model):
+    code = models.CharField(max_length=40, unique=True, choices=TASK_CHOICES)
+    title = models.CharField(max_length=120)
+    description = models.TextField(blank=True)
+    default_prompt = models.TextField(blank=True)
+    active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        verbose_name = "AI Task Type"
+        verbose_name_plural = "AI Task Types"
+
+    def __str__(self):
+        return self.title
+
+
+class AIMCPServer(models.Model):
+    name = models.CharField(max_length=120)
+    task_type = models.CharField(max_length=40, choices=TASK_CHOICES)
+    endpoint = models.CharField(max_length=255, blank=True, help_text="URL ou nome interno do MCP server")
+    provider = models.CharField(max_length=80, default="gemini")
+    model_name = models.CharField(max_length=120, default="gemini-1.5-flash")
+    system_prompt = models.TextField(blank=True)
+    config_json = models.JSONField(default=dict, blank=True)
+    active = models.BooleanField(default=True)
+    auto_update = models.BooleanField(default=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "AI MCP Server"
+        verbose_name_plural = "AI MCP Servers"
+
+    def __str__(self):
+        return f"{self.name} ({self.task_type})"
+
+
+
+# Duplicated AIMCPAgent class removed by fix_admin_aiagent_conflict_v1_3.py
+class AIJSONLibrary(models.Model):
+    title = models.CharField(max_length=160)
+    key = models.SlugField(unique=True)
+    task_type = models.CharField(max_length=40, choices=TASK_CHOICES)
+    language = models.CharField(max_length=80, blank=True)
+    target_os = models.CharField(max_length=40, choices=OS_CHOICES, default="all")
+    source = models.CharField(max_length=120, default="admin", help_text="admin, upload, gemini, cinewiz, zturbo, docs_template")
+    json_data = models.JSONField(default=dict, blank=True)
+    active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "AI JSON Library"
+        verbose_name_plural = "AI JSON Libraries"
+
+    def __str__(self):
+        return self.title
+
+
+class AIPromptTemplate(models.Model):
+    title = models.CharField(max_length=160)
+    task_type = models.CharField(max_length=40, choices=TASK_CHOICES)
+    language = models.CharField(max_length=80, blank=True)
+    prompt = models.TextField()
+    json_schema = models.JSONField(default=dict, blank=True)
+    active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        verbose_name = "AI MCP Prompt Template"
+        verbose_name_plural = "AI MCP Prompt Templates"
+
+    def __str__(self):
+        return self.title
+
+
+class AIUploadSession(models.Model):
+    title = models.CharField(max_length=160)
+    task_type = models.CharField(max_length=40, choices=TASK_CHOICES)
+    uploaded_file = models.FileField(upload_to="ai_uploads/%Y/%m/%d/", blank=True, null=True)
+    parsed_json = models.JSONField(default=dict, blank=True)
+    notes = models.TextField(blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        verbose_name = "AI Upload Session"
+        verbose_name_plural = "AI Upload Sessions"
+
+    def __str__(self):
+        return self.title
+
+
+class AIGeneratedArtifact(models.Model):
+    title = models.CharField(max_length=160)
+    task_type = models.CharField(max_length=40, choices=TASK_CHOICES)
+    agent = models.ForeignKey(AIMCPAgent, null=True, blank=True, on_delete=models.SET_NULL)
+    input_prompt = models.TextField(blank=True)
+    output_text = models.TextField(blank=True)
+    output_json = models.JSONField(default=dict, blank=True)
+    file_path = models.CharField(max_length=255, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        verbose_name = "AI Generated Artifact"
+        verbose_name_plural = "AI Generated Artifacts"
+
+    def __str__(self):
+        return self.title
+
+
+class MCPMultimediaConfig(models.Model):
+    name = models.CharField(max_length=140, default="Default Multimedia MCP")
+    image_engine = models.CharField(max_length=80, default="flux.1-dev")
+    video_engine = models.CharField(max_length=80, default="wan2.1")
+    audio_engine = models.CharField(max_length=80, default="bark-tts")
+    rag_engine = models.CharField(max_length=80, default="sentence-transformers")
+    code_engine = models.CharField(max_length=80, default="deepseek-code")
+    enable_image_mcp = models.BooleanField(default=True)
+    enable_video_mcp = models.BooleanField(default=True)
+    enable_audio_mcp = models.BooleanField(default=True)
+    enable_rag_mcp = models.BooleanField(default=True)
+    enable_code_mcp = models.BooleanField(default=True)
+    config_json = models.JSONField(default=dict, blank=True)
+    training_json = models.JSONField(default=dict, blank=True)
+    active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "MCP Multimedia Config"
+        verbose_name_plural = "MCP Multimedia Configs"
+
+    def __str__(self):
+        return self.name

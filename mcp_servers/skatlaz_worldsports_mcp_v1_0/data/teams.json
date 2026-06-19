@@ -1,0 +1,43 @@
+[
+  {
+    "name": "Brazil national football team",
+    "sport": "soccer",
+    "country": "Brazil",
+    "aliases": [
+      "brasil",
+      "seleção brasileira"
+    ],
+    "founded": 1914,
+    "tags": [
+      "world cup",
+      "copa do mundo"
+    ],
+    "website": "https://www.cbf.com.br/"
+  },
+  {
+    "name": "Argentina national football team",
+    "sport": "soccer",
+    "country": "Argentina",
+    "aliases": [
+      "argentina"
+    ],
+    "founded": 1893,
+    "tags": [
+      "world cup"
+    ],
+    "website": "https://www.afa.com.ar/"
+  },
+  {
+    "name": "Los Angeles Lakers",
+    "sport": "basketball",
+    "country": "USA",
+    "aliases": [
+      "lakers"
+    ],
+    "founded": 1947,
+    "tags": [
+      "nba"
+    ],
+    "website": "https://www.nba.com/lakers"
+  }
+]

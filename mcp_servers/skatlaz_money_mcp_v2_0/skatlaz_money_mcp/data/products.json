@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "name": "Notebook Demo",
+    "category": "informatica",
+    "price": 2500.0,
+    "rating": 4.5,
+    "marketplace": "local",
+    "url": "",
+    "details": "Produto exemplo para comparação"
+  },
+  {
+    "id": 2,
+    "name": "Monitor Demo",
+    "category": "informatica",
+    "price": 900.0,
+    "rating": 4.2,
+    "marketplace": "local",
+    "url": "",
+    "details": "Produto exemplo para catálogo"
+  }
+]

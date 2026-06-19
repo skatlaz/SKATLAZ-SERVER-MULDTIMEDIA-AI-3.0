@@ -1,0 +1,30 @@
+[
+  {
+    "name": "FIFA World Cup",
+    "sport": "soccer",
+    "type": "world championship",
+    "frequency": "4 years",
+    "first_year": 1930
+  },
+  {
+    "name": "Olympic Games",
+    "sport": "multi-sport",
+    "type": "olympics",
+    "frequency": "4 years",
+    "first_year": 1896
+  },
+  {
+    "name": "UEFA Champions League",
+    "sport": "soccer",
+    "type": "club championship",
+    "frequency": "annual",
+    "first_year": 1955
+  },
+  {
+    "name": "NBA Finals",
+    "sport": "basketball",
+    "type": "league finals",
+    "frequency": "annual",
+    "first_year": 1947
+  }
+]

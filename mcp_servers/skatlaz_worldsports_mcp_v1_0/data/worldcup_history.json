@@ -1,0 +1,44 @@
+[
+  {
+    "year": 1994,
+    "host": "United States",
+    "winner": "Brazil",
+    "runner_up": "Italy",
+    "score": "0-0, Brazil won 3-2 on penalties"
+  },
+  {
+    "year": 1998,
+    "host": "France",
+    "winner": "France",
+    "runner_up": "Brazil",
+    "score": "3-0"
+  },
+  {
+    "year": 2002,
+    "host": "South Korea/Japan",
+    "winner": "Brazil",
+    "runner_up": "Germany",
+    "score": "2-0"
+  },
+  {
+    "year": 2014,
+    "host": "Brazil",
+    "winner": "Germany",
+    "runner_up": "Argentina",
+    "score": "1-0 aet"
+  },
+  {
+    "year": 2018,
+    "host": "Russia",
+    "winner": "France",
+    "runner_up": "Croatia",
+    "score": "4-2"
+  },
+  {
+    "year": 2022,
+    "host": "Qatar",
+    "winner": "Argentina",
+    "runner_up": "France",
+    "score": "3-3, Argentina won 4-2 on penalties"
+  }
+]

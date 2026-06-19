@@ -1,0 +1,52 @@
+[
+  {
+    "name": "Pelé",
+    "sport": "soccer",
+    "country": "Brazil",
+    "aliases": [
+      "pele",
+      "edson arantes"
+    ],
+    "tags": [
+      "world cup",
+      "santos",
+      "brazil"
+    ]
+  },
+  {
+    "name": "Marta",
+    "sport": "soccer",
+    "country": "Brazil",
+    "aliases": [
+      "marta vieira"
+    ],
+    "tags": [
+      "women football",
+      "brazil"
+    ]
+  },
+  {
+    "name": "Michael Jordan",
+    "sport": "basketball",
+    "country": "USA",
+    "aliases": [
+      "jordan"
+    ],
+    "tags": [
+      "nba",
+      "chicago bulls"
+    ]
+  },
+  {
+    "name": "Usain Bolt",
+    "sport": "athletics",
+    "country": "Jamaica",
+    "aliases": [
+      "bolt"
+    ],
+    "tags": [
+      "olympics",
+      "sprint"
+    ]
+  }
+]

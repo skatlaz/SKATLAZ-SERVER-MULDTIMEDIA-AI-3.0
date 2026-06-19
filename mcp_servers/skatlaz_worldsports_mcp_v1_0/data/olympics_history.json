@@ -1,0 +1,26 @@
+[
+  {
+    "year": 2012,
+    "city": "London",
+    "country": "United Kingdom",
+    "notes": "Summer Olympic Games"
+  },
+  {
+    "year": 2016,
+    "city": "Rio de Janeiro",
+    "country": "Brazil",
+    "notes": "Summer Olympic Games"
+  },
+  {
+    "year": 2020,
+    "city": "Tokyo",
+    "country": "Japan",
+    "notes": "Held in 2021 due to COVID-19"
+  },
+  {
+    "year": 2024,
+    "city": "Paris",
+    "country": "France",
+    "notes": "Summer Olympic Games"
+  }
+]

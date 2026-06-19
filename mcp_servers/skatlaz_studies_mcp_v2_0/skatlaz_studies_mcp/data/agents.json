@@ -1,0 +1,6 @@
+[
+  {"slug":"teacher","name":"Teacher Agent","description":"Explica conteúdos e cria materiais didáticos"},
+  {"slug":"support","name":"Support Agent","description":"Atendimento automatizado"},
+  {"slug":"designer","name":"Designer Agent","description":"Cria banners, apresentações, canvas e prompts de imagem"},
+  {"slug":"writer","name":"Writer Agent","description":"Revisão, escrita e resumos"}
+]

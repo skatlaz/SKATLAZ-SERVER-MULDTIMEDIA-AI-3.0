@@ -1,0 +1,11 @@
+{
+  "name": "Busk Blues Book / AI-DSP Press",
+  "style": "cinematic blues progressive rock",
+  "colors": ["deep blue", "olive green", "silver", "vintage gold"],
+  "layers": ["rain_fx", "birds_fx", "bells", "piano", "violins", "backing_vocals", "synth_pad", "extra_guitar"],
+  "master": {
+    "target_lufs": -14,
+    "true_peak": -1,
+    "eq": "warm low end, clear vocal midrange, smooth high air"
+  }
+}

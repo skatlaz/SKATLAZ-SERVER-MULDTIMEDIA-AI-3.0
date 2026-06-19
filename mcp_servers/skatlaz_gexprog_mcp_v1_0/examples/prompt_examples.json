@@ -1,0 +1,7 @@
+[
+  {"prompt":"Crie uma API FastAPI para cadastro de clientes com SQLite", "language":"python"},
+  {"prompt":"Crie um formulário HTML CSS moderno para login", "language":"html"},
+  {"prompt":"Crie uma macro VBA para atualizar uma tabela dinamica", "language":"vba"},
+  {"prompt":"Crie um script Perl CGI que exiba Hello World", "language":"perl"},
+  {"prompt":"Crie um projeto Katlaz++ que abra uma janela desktop", "language":"katlaz"}
+]

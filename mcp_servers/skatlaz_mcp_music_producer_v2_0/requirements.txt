@@ -1,0 +1,21 @@
+# Skatlaz MCP Music Producer 2.0 - core stable stack
+torch
+torchaudio
+librosa
+soundfile
+numpy
+scipy
+demucs
+pydub
+ffmpeg-python
+fastapi
+uvicorn
+mutagen
+tqdm
+
+# Optional / heavy AI stack - install only for v2 generative mode
+# audiocraft
+# xformers
+# sentencepiece
+# transformers
+# accelerate

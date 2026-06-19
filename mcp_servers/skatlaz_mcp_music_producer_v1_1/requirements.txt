@@ -1,0 +1,11 @@
+numpy
+scipy
+librosa
+soundfile
+pydub
+ffmpeg-python
+demucs
+tqdm
+mutagen
+fastapi
+uvicorn

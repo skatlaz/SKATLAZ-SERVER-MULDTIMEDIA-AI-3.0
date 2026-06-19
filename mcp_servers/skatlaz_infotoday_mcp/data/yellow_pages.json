@@ -1,0 +1,24 @@
+[
+  {
+    "name": "Oficina Central Skatlaz Demo",
+    "category": "oficina mecanica",
+    "phone": "(11) 99999-0000",
+    "city": "São Paulo",
+    "district": "Tatuapé",
+    "address": "Rua Exemplo, 123",
+    "services": ["troca de óleo", "freio", "injeção eletrônica"],
+    "rating": 4.7,
+    "source": "local-demo"
+  },
+  {
+    "name": "Farmacia 24h Demo",
+    "category": "farmacia",
+    "phone": "(11) 98888-0000",
+    "city": "São Paulo",
+    "district": "Mooca",
+    "address": "Av Demo, 456",
+    "services": ["medicamentos", "perfumaria", "24 horas"],
+    "rating": 4.5,
+    "source": "local-demo"
+  }
+]

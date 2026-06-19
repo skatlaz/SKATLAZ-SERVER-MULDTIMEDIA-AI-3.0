@@ -1,3 +1,4 @@
+![SKATLAZ SERVER AI](./assets/1776191427721.jpg)
 # Skatlaz Server Multimedia AI 3.0
 
 # Beta VERSION

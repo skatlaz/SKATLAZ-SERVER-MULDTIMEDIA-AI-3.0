@@ -1,6 +1,6 @@
 # Skatlaz Server Multimedia AI 3.0
 
-![SKATLAZ SERVER MULTIMEDIA AI 3.0]('./assets/Captura de tela 2026-06-19 113312.png')
+![SKATLAZ SERVER MULTIMEDIA AI 3.0](./assets/Captura de tela 2026-06-19 113312.png)
 
 # Beta VERSION
 

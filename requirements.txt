@@ -1,0 +1,14 @@
+Django>=4.2
+pypdf>=4.0.0
+python-docx>=1.1.0
+google-genai>=1.0.0
+ollama>=0.3.0
+scikit-learn
+duckduckgo-search
+webdiver
+# Optional training stack:
+# torch transformers datasets peft bitsandbytes accelerate trl
+# Optional vector backends:
+# chromadb faiss-cpu sentence-transformers
+
+cryptography>=42.0.0

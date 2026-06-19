@@ -1,0 +1,251 @@
+{
+  "version": "3.0.0",
+  "server_url": "http://localhost:8000/",
+  "mcp_servers": [
+    {
+      "slug": "entertainment",
+      "name": "Entertainment MCP",
+      "folder": "skatlaz_entertainment_mcp_v1_0",
+      "port": 8092,
+      "cmd": "uvicorn skatlaz_entertainment_mcp.server:app --host 127.0.0.1 --port 8092 --reload",
+      "pipeline": "content_entertainment",
+      "features": [
+        "filmes",
+        "séries",
+        "música",
+        "resumos",
+        "recomendações"
+      ]
+    },
+    {
+      "slug": "gexprog",
+      "name": "GexProg MCP / DeepSeek Code",
+      "folder": "skatlaz_gexprog_mcp_v1_0",
+      "port": 8077,
+      "cmd": "uvicorn server:app --host 127.0.0.1 --port 8077 --reload",
+      "pipeline": "code_deepseek",
+      "features": [
+        "código",
+        "debug",
+        "refatoração",
+        "RAG de paradigmas"
+      ]
+    },
+    {
+      "slug": "infotoday",
+      "name": "InfoToday MCP",
+      "folder": "skatlaz_infotoday_mcp",
+      "port": 8093,
+      "cmd": "python -m uvicorn server:app --host 127.0.0.1 --port 8093 --reload",
+      "pipeline": "information_research",
+      "features": [
+        "notícias",
+        "clima",
+        "mapas",
+        "transporte",
+        "pesquisa"
+      ]
+    },
+    {
+      "slug": "music_v1",
+      "name": "Music Producer MCP 1.1",
+      "folder": "skatlaz_mcp_music_producer_v1_1",
+      "port": 8787,
+      "cmd": "uvicorn mcp_server:app --host 127.0.0.1 --port 8787 --reload",
+      "pipeline": "audio_mastering",
+      "features": [
+        "análise",
+        "stems",
+        "masterização"
+      ]
+    },
+    {
+      "slug": "music_v2",
+      "name": "Music Producer MCP 2.0",
+      "folder": "skatlaz_mcp_music_producer_v2_0",
+      "port": 8788,
+      "cmd": "uvicorn mcp_server:app --host 127.0.0.1 --port 8788 --reload",
+      "pipeline": "audio_generation",
+      "features": [
+        "backing vocals",
+        "violinos",
+        "synths",
+        "geração musical"
+      ]
+    },
+    {
+      "slug": "office",
+      "name": "Office AI Worker MCP",
+      "folder": "skatlaz_mcp_office_ai_worker_v2_1",
+      "port": 8061,
+      "cmd": "python main.py server",
+      "pipeline": "office_productivity",
+      "features": [
+        "documentos",
+        "planilhas",
+        "slides",
+        "OCR",
+        "tradução"
+      ]
+    },
+    {
+      "slug": "money",
+      "name": "Money MCP",
+      "folder": "skatlaz_money_mcp_v2_0",
+      "port": 8020,
+      "cmd": "uvicorn skatlaz_money_mcp.server:app --host 127.0.0.1 --port 8020 --reload",
+      "pipeline": "finance_business",
+      "features": [
+        "finanças",
+        "estatística",
+        "e-commerce",
+        "moedas",
+        "bolsa"
+      ]
+    },
+    {
+      "slug": "openstudio",
+      "name": "OpenStudio MCP",
+      "folder": "skatlaz_openstudio_mcp_v2_0",
+      "port": 8088,
+      "cmd": "uvicorn skatlaz_openstudio.api.server:app --host 127.0.0.1 --port 8088 --reload",
+      "pipeline": "openstudio_multimedia",
+      "features": [
+        "imagem",
+        "vídeo",
+        "áudio",
+        "TTS",
+        "STT",
+        "OCR"
+      ]
+    },
+    {
+      "slug": "studies",
+      "name": "Studies MCP",
+      "folder": "skatlaz_studies_mcp_v2_0",
+      "port": 8045,
+      "cmd": "uvicorn skatlaz_studies_mcp.server:app --host 127.0.0.1 --port 8045 --reload",
+      "pipeline": "education_creative",
+      "features": [
+        "educação",
+        "quizzes",
+        "canvas",
+        "apresentações"
+      ]
+    },
+    {
+      "slug": "surftask",
+      "name": "SurfTask MCP",
+      "folder": "skatlaz_surftask_mcp_v1_0",
+      "port": 8790,
+      "cmd": "uvicorn skatlaz_surftask_mcp.server:app --host 127.0.0.1 --port 8790 --reload",
+      "pipeline": "web_automation",
+      "features": [
+        "scraping",
+        "resumos",
+        "metatags",
+        "thumbnails"
+      ]
+    },
+    {
+      "slug": "worldsports",
+      "name": "WorldSports MCP",
+      "folder": "skatlaz_worldsports_mcp_v1_0",
+      "port": 8062,
+      "cmd": "python main.py server",
+      "pipeline": "sports_data",
+      "features": [
+        "scores",
+        "históricos",
+        "rankings",
+        "atletas"
+      ]
+    }
+  ],
+  "pipelines": {
+    "content_entertainment": [
+      "prompt",
+      "media_rag",
+      "recommend",
+      "summary",
+      "export"
+    ],
+    "code_deepseek": [
+      "detect_language",
+      "deepseek_code",
+      "generate",
+      "debug",
+      "tests",
+      "artifact"
+    ],
+    "information_research": [
+      "query",
+      "webdiver",
+      "apis",
+      "rag_index",
+      "report"
+    ],
+    "audio_mastering": [
+      "analyze",
+      "stems",
+      "master",
+      "report",
+      "export"
+    ],
+    "audio_generation": [
+      "lyrics_or_prompt",
+      "instrument_model",
+      "arrange",
+      "mix",
+      "export"
+    ],
+    "office_productivity": [
+      "ingest",
+      "ocr",
+      "summarize",
+      "dashboard",
+      "docx_xlsx_pptx"
+    ],
+    "finance_business": [
+      "ingest_csv",
+      "calculate",
+      "forecast",
+      "charts",
+      "report"
+    ],
+    "openstudio_multimedia": [
+      "image",
+      "video",
+      "audio",
+      "tts_stt",
+      "ffmpeg_export"
+    ],
+    "education_creative": [
+      "topic",
+      "lesson",
+      "quiz",
+      "canvas",
+      "presentation"
+    ],
+    "web_automation": [
+      "crawl",
+      "extract",
+      "summarize",
+      "thumbnail",
+      "dataset"
+    ],
+    "sports_data": [
+      "feeds",
+      "results",
+      "rankings",
+      "rag",
+      "dashboard"
+    ]
+  },
+  "default_llms": [
+    "ollama",
+    "deepseek-code",
+    "gemini"
+  ],
+  "notes": "Skatlaz Server AI 3.0 MCP registry. Ports were adjusted to avoid conflicts with Django on 8000."
+}

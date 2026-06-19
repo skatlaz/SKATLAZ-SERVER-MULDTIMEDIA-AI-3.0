@@ -1,0 +1,26 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}
+Skatlaz Server AI 2.0
+{% endblock %}
+
+{% block branding %}
+
+<div class="skatlaz-admin-banner">
+
+    <img
+        src="{% static 'ai_core/img/skatlaz_server_banner.jpeg' %}"
+        alt="Skatlaz Server AI 2.0">
+
+</div>
+
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+
+<link rel="stylesheet"
+      href="{% static 'ai_core/admin/skatlaz_admin.css' %}">
+
+{% endblock %}

@@ -1,0 +1,13 @@
+{
+  "license_key": "SKZ20C.eyJwcm9kdWN0Ijoic2thdGxhei1zZXJ2ZXItYWktMi4wLWNvbW1lcmNpYWwiLCJzZXJpYWwiOiJTS1otQ09NLTIuMC0wMDAwMSIsImN1c3RvbWVyIjoiVU5BU1NJR05FRCIsImVkaXRpb24iOiJQUk8iLCJpc3N1ZWRfYXQiOiIyMDI2LTA2LTA1VDE2OjQ0OjA5WiIsImV4cGlyZXMiOm51bGwsIm1hY2hpbmUiOm51bGwsIm5vbmNlIjoiODgxMWVmOWRjMDE3YjFlNyJ9.MfHsVdVOEeNaTcinb8WOOnpKeiN3lAstELKZEa-xsWiRIABobLFEizNFJl3otjmQuIYi8X2dxkj7UA5_xS8KJSEPQNmVCSdLgUi5YV7AB44NLhYXPRxZUFAQaHf82TpJmLwZuU7C5bmwWgO4B-Z9rxUy9r-ZwzcS81Ec7-5eMiAfFD9APtdxN3YCrhehnXQf35uGJzDsWeZ4SEPTNvXNBKBoKEHnYmO9yGqvCpJJkhP2BDid17zETo1o8wEMG-1n-w40cKWRqy7bwpPzu_pIN_7WZ5FB9Haoe5quBDTzfKJEcC4kxrG9akiiZS0Fs20GrfXXio8CXOV_uthAowx9Vw",
+  "payload": {
+    "product": "skatlaz-server-ai-2.0-commercial",
+    "serial": "SKZ-COM-2.0-00001",
+    "customer": "UNASSIGNED",
+    "edition": "PRO",
+    "issued_at": "2026-06-05T16:44:09Z",
+    "expires": null,
+    "machine": null,
+    "nonce": "8811ef9dc017b1e7"
+  }
+}

@@ -1,7 +1,5 @@
 # Skatlaz Server Multimedia AI 3.0
 
-![SKATLAZ SERVER MULTIMEDIA AI 3.0](assets/Captura de tela 2026-06-19 113312.png)
-
 # Beta VERSION
 
 Servidor Django para IA generativa com painel administrativo, agentes por categoria, RAG, uploads de arquivos, WebDiver, Ollama, Google Gemini e preparação de LoRA/QLoRA para exportação ao Ollama.
